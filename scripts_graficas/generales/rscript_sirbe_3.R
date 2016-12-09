@@ -1,7 +1,7 @@
 library(extrafont)
 setwd("/tmp/SDIS_SIRBE/database/")
 base_sdis <- read.csv("CargueSIRBEVejez.csv",header = T)
-Frecuencia <- table(base_sdis$NOMTENVIV, base_sdis$EDAD_ACTUAL)
+Frecuencia <- table(base_sdis$NOMSEXO, base_sdis$EDAD_ACTUAL)
 #Nombre de columnas
 colnames(Frecuencia)
 #Nombres filas
@@ -24,10 +24,13 @@ percent <- function(x, digits = 2, format = "f")
 {
   paste0(formatC(100 * x, format = format, digits = digits), "%")
 }
-#Para imprimir en pdf
-pdf(file = "/tmp/grafica.pdf", width = 12, height = 7, family = "Helvetica")
+#Para imprimir en png
+png(filename = "/tmp/graficas/grafica.png",
+    width = 480, height = 480, units = "px", pointsize = 12,
+    bg = "white",  res = NA, 
+    type = c("cairo", "cairo-png", "Xlib", "quartz"))
 #Crear gráfica, estilo=barra 
-bp <- barplot(x, main="Distribución Beneficiaria Tenencia de la Vivienda", axes=FALSE,
+bp <-barplot(x, main="Distribución de Población Beneficiaria por Sexo", axes=FALSE,
         col=c("steelblue"), ylim=c(0,0.9),
         legend = rownames(x), beside=TRUE)
 #Coloca el porcentaje en la parte inferior de la barra
