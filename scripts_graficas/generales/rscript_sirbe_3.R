@@ -25,10 +25,10 @@ percent <- function(x, digits = 2, format = "f")
   paste0(formatC(100 * x, format = format, digits = digits), "%")
 }
 #Para imprimir en png
-png(filename = "/tmp/graficas/grafica.png",
+png(filename = "/tmp/grafica/grafica.png",
     #Modificar las dimensiones 
     #widht 1480 1280 680 480
-    width = 680, height = 480, units = "px", pointsize = 12,
+    width = 480, height = 480, units = "px", pointsize = 12,
     bg = "white",  res = NA, 
     type = c("cairo", "cairo-png", "Xlib", "quartz"))
 #Crear gráfica, estilo=barra 
