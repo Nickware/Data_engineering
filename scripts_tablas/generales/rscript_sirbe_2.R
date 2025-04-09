@@ -1,30 +1,72 @@
-#Librerias 
-library(xlsx)
-library(openxlsx)
-library(extrafont)
-#Definir ubicación
-setwd("/tmp/SDIS_SIRBE")
-#Cargar base de datos
-base_sdis <- read.csv("CargueSIRBEVejez.csv",header = T)
-#Construir una tabla con dos variables
+# ---------------------------------------------
+# ANÁLISIS DE FRECUENCIAS SDIS - VEJEZ
+# ---------------------------------------------
+# Este script carga una base de datos CSV con información de personas mayores,
+# construye una tabla de frecuencia cruzada entre tipo de vivienda y edad actual,
+# calcula totales y porcentajes por tipo de vivienda, exporta los resultados a un archivo Excel,
+# y genera un gráfico de barras con los totales por tipo de vivienda.
+# ---------------------------------------------
+
+# 📦 Cargar solo la librería necesaria
+library(openxlsx)  # Librería moderna y eficiente para trabajar con archivos Excel
+
+# 📁 Definir ubicación de trabajo y nombre de archivo
+setwd("/tmp/SDIS_SIRBE")  # Establece la carpeta donde están los archivos
+archivo_csv <- "CargueSIRBEVejez.csv"  # Nombre del archivo de entrada
+archivo_salida <- "tablas/FrecuenciaPorVivienda.xlsx"  # Archivo de salida
+
+# ✅ Verificar existencia del archivo CSV
+if (!file.exists(archivo_csv)) {
+  stop(paste("❌ Archivo no encontrado:", archivo_csv))
+}
+
+# 📄 Cargar base de datos
+base_sdis <- read.csv(archivo_csv, header = TRUE, stringsAsFactors = FALSE)
+
+# 🛡️ Validar que las columnas necesarias estén presentes
+if (!all(c("NOMTENVIV", "EDAD_ACTUAL") %in% colnames(base_sdis))) {
+  stop("❌ Las columnas 'NOMTENVIV' y/o 'EDAD_ACTUAL' no existen en los datos.")
+}
+
+# 📊 Construcción de tabla de frecuencia cruzada
+# Muestra la cantidad de personas por tipo de vivienda y edad actual
 Frecuencia <- table(base_sdis$NOMTENVIV, base_sdis$EDAD_ACTUAL)
-#Nombre de columnas
-colnames(Frecuencia)
-#Nombres filas
-rownames(Frecuencia)
-#Sumar los valores numericos de la filas
-SumaFrecuencia<-rowSums(Frecuencia)
-#Sumar todos los valores numericos de la variable
-TotalFrecuencia <- sum(SumaFrecuencia)
-#Calcula el porcentaje
-PorcentajeFrecuencia <- (prop.table(SumaFrecuencia))
-#Unir columnas y contruir una nueva tabla
-tablaFrecuencia <- cbind(SumaFrecuencia, PorcentajeFrecuencia)
-#Renombrasr columnas
-colnames(tablaFrecuencia) <- c("Total", "%")
-#Guardar en una tabla nueva
-FrecuenciaPrint <- as.table(tablaFrecuencia)
-#Crear lista de imprimibles
-lista_de_datos <- list("Generales" = FrecuenciaPrint)
-#Imprime a un archivo de formato xlsx
-write.xlsx(lista_de_datos, file = "tablas/generales.xlsx")
+
+# ➕ Cálculo de totales y porcentajes
+SumaFrecuencia <- rowSums(Frecuencia)  # Total por tipo de vivienda
+TotalFrecuencia <- sum(SumaFrecuencia)  # Total general
+PorcentajeFrecuencia <- round(prop.table(SumaFrecuencia) * 100, 2)  # Porcentaje por fila
+
+# 🧱 Construcción de nueva tabla resumen
+tablaFrecuencia <- data.frame(
+  Tipo_Vivienda = names(SumaFrecuencia),  # Nombre de la categoría
+  Total = SumaFrecuencia,                 # Total de casos por categoría
+  Porcentaje = PorcentajeFrecuencia       # Porcentaje del total general
+)
+
+# 📂 Crear carpeta de salida si no existe
+if (!dir.exists("tablas")) {
+  dir.create("tablas")  # Crea la carpeta 'tablas' si aún no existe
+}
+
+# 📤 Exportar tabla resumen a archivo Excel (.xlsx)
+write.xlsx(tablaFrecuencia, file = archivo_salida, sheetName = "Frecuencia", rowNames = FALSE)
+
+# ➕ Agregar segunda hoja al mismo archivo Excel con la tabla cruzada completa
+addWorksheetBook <- loadWorkbook(archivo_salida)  # Cargar el archivo previamente creado
+addWorksheet(addWorksheetBook, "Tabla_Cruzada")   # Crear nueva hoja
+writeData(addWorksheetBook, sheet = "Tabla_Cruzada", x = as.data.frame.matrix(Frecuencia))
+saveWorkbook(addWorksheetBook, file = archivo_salida, overwrite = TRUE)  # Guardar cambios
+
+# 📈 Crear gráfico de barras de los totales y guardarlo como imagen PNG
+png("tablas/FrecuenciaPorVivienda.png", width = 900, height = 600)
+barplot(SumaFrecuencia,
+        las = 2,                        # Rotación de etiquetas
+        col = "skyblue",               # Color de barras
+        main = "Frecuencia por Tipo de Vivienda",
+        ylab = "Total",
+        cex.names = 0.8)               # Tamaño de etiquetas
+dev.off()  # Finaliza y guarda el gráfico
+
+# ✅ Mensaje de finalización
+cat("✅ Análisis finalizado. Archivo guardado en:", archivo_salida, "\n")
