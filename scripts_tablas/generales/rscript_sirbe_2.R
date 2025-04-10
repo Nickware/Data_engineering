@@ -7,58 +7,58 @@
 # y genera un gráfico de barras con los totales por tipo de vivienda.
 # ---------------------------------------------
 
-# 📦 Cargar solo la librería necesaria
+# Cargar solo la librería necesaria
 library(openxlsx)  # Librería moderna y eficiente para trabajar con archivos Excel
 
-# 📁 Definir ubicación de trabajo y nombre de archivo
+#  Definir ubicación de trabajo y nombre de archivo
 setwd("/tmp/SDIS_SIRBE")  # Establece la carpeta donde están los archivos
 archivo_csv <- "CargueSIRBEVejez.csv"  # Nombre del archivo de entrada
 archivo_salida <- "tablas/FrecuenciaPorVivienda.xlsx"  # Archivo de salida
 
-# ✅ Verificar existencia del archivo CSV
+# Verificar existencia del archivo CSV
 if (!file.exists(archivo_csv)) {
-  stop(paste("❌ Archivo no encontrado:", archivo_csv))
+  stop(paste(" Archivo no encontrado:", archivo_csv))
 }
 
-# 📄 Cargar base de datos
+# Cargar base de datos
 base_sdis <- read.csv(archivo_csv, header = TRUE, stringsAsFactors = FALSE)
 
-# 🛡️ Validar que las columnas necesarias estén presentes
+# Validar que las columnas necesarias estén presentes
 if (!all(c("NOMTENVIV", "EDAD_ACTUAL") %in% colnames(base_sdis))) {
-  stop("❌ Las columnas 'NOMTENVIV' y/o 'EDAD_ACTUAL' no existen en los datos.")
+  stop(" Las columnas 'NOMTENVIV' y/o 'EDAD_ACTUAL' no existen en los datos.")
 }
 
-# 📊 Construcción de tabla de frecuencia cruzada
+# Construcción de tabla de frecuencia cruzada
 # Muestra la cantidad de personas por tipo de vivienda y edad actual
 Frecuencia <- table(base_sdis$NOMTENVIV, base_sdis$EDAD_ACTUAL)
 
-# ➕ Cálculo de totales y porcentajes
+# Cálculo de totales y porcentajes
 SumaFrecuencia <- rowSums(Frecuencia)  # Total por tipo de vivienda
 TotalFrecuencia <- sum(SumaFrecuencia)  # Total general
 PorcentajeFrecuencia <- round(prop.table(SumaFrecuencia) * 100, 2)  # Porcentaje por fila
 
-# 🧱 Construcción de nueva tabla resumen
+# Construcción de nueva tabla resumen
 tablaFrecuencia <- data.frame(
   Tipo_Vivienda = names(SumaFrecuencia),  # Nombre de la categoría
   Total = SumaFrecuencia,                 # Total de casos por categoría
   Porcentaje = PorcentajeFrecuencia       # Porcentaje del total general
 )
 
-# 📂 Crear carpeta de salida si no existe
+# Crear carpeta de salida si no existe
 if (!dir.exists("tablas")) {
   dir.create("tablas")  # Crea la carpeta 'tablas' si aún no existe
 }
 
-# 📤 Exportar tabla resumen a archivo Excel (.xlsx)
+# Exportar tabla resumen a archivo Excel (.xlsx)
 write.xlsx(tablaFrecuencia, file = archivo_salida, sheetName = "Frecuencia", rowNames = FALSE)
 
-# ➕ Agregar segunda hoja al mismo archivo Excel con la tabla cruzada completa
+# Agregar segunda hoja al mismo archivo Excel con la tabla cruzada completa
 addWorksheetBook <- loadWorkbook(archivo_salida)  # Cargar el archivo previamente creado
 addWorksheet(addWorksheetBook, "Tabla_Cruzada")   # Crear nueva hoja
 writeData(addWorksheetBook, sheet = "Tabla_Cruzada", x = as.data.frame.matrix(Frecuencia))
 saveWorkbook(addWorksheetBook, file = archivo_salida, overwrite = TRUE)  # Guardar cambios
 
-# 📈 Crear gráfico de barras de los totales y guardarlo como imagen PNG
+# Crear gráfico de barras de los totales y guardarlo como imagen PNG
 png("tablas/FrecuenciaPorVivienda.png", width = 900, height = 600)
 barplot(SumaFrecuencia,
         las = 2,                        # Rotación de etiquetas
@@ -68,5 +68,5 @@ barplot(SumaFrecuencia,
         cex.names = 0.8)               # Tamaño de etiquetas
 dev.off()  # Finaliza y guarda el gráfico
 
-# ✅ Mensaje de finalización
-cat("✅ Análisis finalizado. Archivo guardado en:", archivo_salida, "\n")
+# Mensaje de finalización
+cat("Análisis finalizado. Archivo guardado en:", archivo_salida, "\n")
