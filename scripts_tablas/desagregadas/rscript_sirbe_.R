@@ -78,4 +78,4 @@ agregar_hoja("Vejez Tardía (75+)", tabla_tardia, img_tardia)
 saveWorkbook(wb, file = "tablas/resumen_vejez_con_graficos.xlsx", overwrite = TRUE)
 
 # Mensaje final
-cat("✔️ Archivo Excel y gráficos generados con éxito en la carpeta 'tablas'.\n")
+cat(" Archivo Excel y gráficos generados con éxito en la carpeta 'tablas'.\n")
