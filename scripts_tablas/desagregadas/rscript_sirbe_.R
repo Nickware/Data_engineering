@@ -43,7 +43,7 @@ tabla_otros    <- procesar_tabla(df_otros)
 tabla_temprana <- procesar_tabla(df_temprana)
 tabla_tardia   <- procesar_tabla(df_tardia)
 
-# 📊 Función para generar gráfico de barras
+# Función para generar gráfico de barras
 graficar_tabla <- function(tabla, titulo, nombre_archivo) {
   p <- ggplot(tabla, aes(x = reorder(TipoVivienda, Total), y = Total)) +
     geom_bar(stat = "identity", fill = "#2a9d8f") +
