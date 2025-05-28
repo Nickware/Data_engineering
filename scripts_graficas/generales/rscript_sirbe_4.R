@@ -1,44 +1,70 @@
-#LIbreria para especializada para gráficas de alta calidad en R
+# LIBRERÍAS ----
 library(ggplot2)
-setwd("/tmp/SDIS_SIRBE/database/")
-base_sdis <- read.csv("CargueSIRBEVejez.csv",header = T)
-#Mis variables
-edad=base_sdis$EDAD_ACTUAL
-sexo=base_sdis$NOMSEXO
-#Creo una tabla para una variable
-x <- table(sexo)
-#Calcula el porcentaje
-porcentaje <-prop.table(x)
-#Creouna tabla para los valores porcentuados
-ul <- data.frame(porcentaje)
-#Función para aplicar el formato de porcentaje en digitos
-percent <- function(x, digits = 2, format = "f") 
-{
-  paste0(formatC(100 * x, format = format, digits = digits), "%")
+library(scales)  # Para formato de porcentajes
+library(dplyr)   # Para manipulación de datos
+
+# CONFIGURACIÓN INICIAL ----
+# Establecer directorio de trabajo con verificación
+if(dir.exists("/tmp/SDIS_SIRBE/database/")) {
+  setwd("/tmp/SDIS_SIRBE/database/")
+} else {
+  stop("El directorio especificado no existe")
 }
-#Aplicar la funcion percent a la columna Freq del frame de datos ul 
-etiqueta<-percent(ul$Freq)
-#Bloque para producir gráfica
-ggplot(data=ul, aes(x=sexo, y=Freq)) +
-  ggtitle("Distribución poblacional del beneficiario por sexo")+
-  ylim(0, 1)+
-  theme(plot.title = element_text(size=3, face="bold"),
-        axis.title.x=element_blank(),
-        axis.text.x=element_text(size =3),
-        axis.title.y=element_blank(),
-        axis.text.y=element_text(size = 3),
-        panel.background = element_blank())+
-  geom_bar(stat="identity", fill="steelblue")+
-  geom_text(aes(label=etiqueta), 
-            vjust=-0.1, 
-            color="black", 
-            size=1)
-#Para guardar gráfica
-#Modificar las dimensiones widht en pulgadas in
-#Utilizar conversor de unidades gráficas de Gimp
-#1480 px == 4.933
-#1280 px == 4.267 in
-#680 px == 2.267 in
-#480 px == 1.6 in
-ggsave("/tmp/grafica.png", width = 1.6, height = 1.6, units = "in")
-  #theme_minimal()
+
+# CARGA DE DATOS ----
+# Cargar datos con manejo de errores y especificación de encoding
+if(file.exists("CargueSIRBEVejez.csv")) {
+  base_sdis <- read.csv("CargueSIRBEVejez.csv", 
+                       header = TRUE, 
+                       stringsAsFactors = FALSE,
+                       fileEncoding = "UTF-8")
+  
+  # Verificar que las columnas necesarias existan
+  if(!all(c("EDAD_ACTUAL", "NOMSEXO") %in% colnames(base_sdis))) {
+    stop("El dataset no contiene las columnas requeridas (EDAD_ACTUAL, NOMSEXO)")
+  }
+} else {
+  stop("El archivo CargueSIRBEVejez.csv no existe en el directorio especificado")
+}
+
+# PREPARACIÓN DE DATOS ----
+# Crear tabla de frecuencias con porcentajes
+datos_grafico <- base_sdis %>%
+  count(NOMSEXO, name = "Frecuencia") %>%
+  mutate(Porcentaje = Frecuencia/sum(Frecuencia),
+         Etiqueta = percent(Porcentaje, accuracy = 0.1))  # Usando scales::percent
+
+# VISUALIZACIÓN ----
+grafico <- ggplot(datos_grafico, aes(x = reorder(NOMSEXO, -Porcentaje), y = Porcentaje)) +
+  geom_col(fill = "#1E88E5", width = 0.7, alpha = 0.8) +  # Azul moderno
+  geom_text(aes(label = Etiqueta), 
+            vjust = -0.5, 
+            color = "black", 
+            size = 3.5) +
+  scale_y_continuous(labels = percent_format(), 
+                    limits = c(0, max(datos_grafico$Porcentaje) * 1.1)) +
+  labs(title = "Distribución de beneficiarios por sexo",
+       subtitle = "Análisis poblacional del sistema SIRBE",
+       x = NULL,
+       y = "Porcentaje") +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 12),
+    plot.subtitle = element_text(hjust = 0.5, size = 10),
+    axis.text = element_text(size = 10),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    plot.margin = unit(c(1, 1, 1, 1), "cm")
+  )
+
+# EXPORTACIÓN DEL GRÁFICO ----
+# Tamaño en píxeles (480px = ~5.33in a 90ppi)
+ggsave("/tmp/grafica.png", 
+       plot = grafico,
+       width = 5.33, 
+       height = 4, 
+       units = "in",
+       dpi = 90)  # Resolución estándar para web
+
+# Mensaje de confirmación
+message("Gráfico generado y guardado exitosamente en /tmp/grafica.png")
