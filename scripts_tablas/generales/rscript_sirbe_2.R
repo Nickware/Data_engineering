@@ -9,19 +9,19 @@
 
 # Cargar solo la librería necesaria
 library(openxlsx)  # Librería moderna y eficiente para trabajar con archivos Excel
+library(readxl)      # Para leer archivos .xlsx
 
 #  Definir ubicación de trabajo y nombre de archivo
 setwd("/tmp/SDIS_SIRBE")  # Establece la carpeta donde están los archivos
-archivo_csv <- "CargueSIRBEVejez.csv"  # Nombre del archivo de entrada
+
+# Leer archivo Excel
+archivo <- "database/CargueSIRBEVejez.xlsx"
+if (!file.exists(archivo)) stop("El archivo Excel no se encuentra en la ruta especificada.")
+
 archivo_salida <- "tablas/FrecuenciaPorVivienda.xlsx"  # Archivo de salida
 
-# Verificar existencia del archivo CSV
-if (!file.exists(archivo_csv)) {
-  stop(paste(" Archivo no encontrado:", archivo_csv))
-}
-
-# Cargar base de datos
-base_sdis <- read.csv(archivo_csv, header = TRUE, stringsAsFactors = FALSE)
+# Leer hoja por defecto (primera hoja)
+base_sdis <- read_excel(archivo)
 
 # Validar que las columnas necesarias estén presentes
 if (!all(c("NOMTENVIV", "EDAD_ACTUAL") %in% colnames(base_sdis))) {
