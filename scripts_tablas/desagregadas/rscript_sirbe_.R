@@ -1,22 +1,26 @@
 # ───────────────────────────────────────────────
 # Script para procesar y graficar datos de vejez por tipo de vivienda (SIRBE - SDIS)
+# Entrada: archivo .xlsx
+# Salida: tablas y gráficos por grupo etario en Excel y PNG
 # ───────────────────────────────────────────────
 
 # Cargar librerías necesarias
 library(dplyr)
-library(readr)
-library(openxlsx)
+library(readxl)      # Para leer archivos .xlsx
+library(openxlsx)    # Para escribir en archivos .xlsx e insertar gráficos
 library(ggplot2)
 
 # Establecer directorio de trabajo
 setwd("/tmp/SDIS_SIRBE")
 
-# Cargar base de datos
-archivo <- "database/CargueSIRBEVejez.csv"
-if (!file.exists(archivo)) stop("El archivo CSV no se encuentra en la ruta especificada.")
-base_sdis <- read_csv(archivo)
+# Leer archivo Excel
+archivo <- "database/CargueSIRBEVejez.xlsx"
+if (!file.exists(archivo)) stop("El archivo Excel no se encuentra en la ruta especificada.")
 
-# Crear tabla de frecuencia cruzada
+# Leer hoja por defecto (primera hoja)
+base_sdis <- read_excel(archivo)
+
+# Crear tabla de frecuencia cruzada (Tipo de vivienda vs edad)
 Frecuencia <- table(base_sdis$NOMTENVIV, base_sdis$EDAD_ACTUAL)
 df_frecuencia <- as.data.frame.matrix(Frecuencia)
 
@@ -26,12 +30,12 @@ rango_otros    <- edades[edades < 60]
 rango_temprana <- edades[edades >= 60 & edades <= 74]
 rango_tardia   <- edades[edades >= 75]
 
-# Extraer subconjuntos
+# Filtrar subconjuntos por grupo etario
 df_otros    <- df_frecuencia[, colnames(df_frecuencia) %in% as.character(rango_otros)]
 df_temprana <- df_frecuencia[, colnames(df_frecuencia) %in% as.character(rango_temprana)]
 df_tardia   <- df_frecuencia[, colnames(df_frecuencia) %in% as.character(rango_tardia)]
 
-# Calcular totales y porcentajes
+# Calcular totales y porcentajes por tipo de vivienda
 procesar_tabla <- function(df_rango) {
   total <- rowSums(df_rango)
   porcentaje <- round(100 * total / sum(total), 2)
@@ -55,13 +59,13 @@ graficar_tabla <- function(tabla, titulo, nombre_archivo) {
   return(paste0("tablas/", nombre_archivo, ".png"))
 }
 
-# Generar gráficos y guardarlos
+# Generar gráficos y guardarlos como imágenes
 dir.create("tablas", showWarnings = FALSE)
 img_otros    <- graficar_tabla(tabla_otros,    "Otros (<60 años)", "grafico_otros")
 img_temprana <- graficar_tabla(tabla_temprana, "Vejez Temprana (60–74)", "grafico_temprana")
 img_tardia   <- graficar_tabla(tabla_tardia,   "Vejez Tardía (75+)", "grafico_tardia")
 
-# Crear archivo Excel con tablas y gráficos
+# Crear archivo Excel con tablas y gráficos insertados
 wb <- createWorkbook()
 
 agregar_hoja <- function(nombre, tabla, imagen) {
@@ -70,6 +74,7 @@ agregar_hoja <- function(nombre, tabla, imagen) {
   insertImage(wb, nombre, imagen, startRow = nrow(tabla) + 4, startCol = 1, width = 6, height = 4, units = "in")
 }
 
+# Agregar hojas al Excel
 agregar_hoja("Otros (<60 años)", tabla_otros, img_otros)
 agregar_hoja("Vejez Temprana (60–74)", tabla_temprana, img_temprana)
 agregar_hoja("Vejez Tardía (75+)", tabla_tardia, img_tardia)
