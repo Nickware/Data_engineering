@@ -14,7 +14,9 @@ Si no está instalado, ejecutar:
 
 ```bash
 sudo apt update
-sudo apt install openjdk-11-jdk -y
+# verificar que versión esta disponible en el repositorio e instalar la mas reciente
+sudo apt search opendjk
+sudo apt install openjdk-21-jdk -y
 ```
 
 Confirmar la ruta de instalación con:
@@ -30,36 +32,62 @@ Se debe obtener algo como `/usr/lib/jvm/java-11-openjdk-amd64/bin/java`.
 Descargar la versión más reciente desde la página oficial o usar `wget` (ejemplo, versión 1.13.2):
 
 ```bash
-wget https://downloads.apache.org/nifi/1.13.2/nifi-1.13.2-bin.tar.gz
+wget https://dlcdn.apache.org/nifi/2.5.0/nifi-2.5.0-bin.zip
 ```
 
-(Consejo: Para la última versión, revisa la sección Download en https://nifi.apache.org/)[^1][^2][^3]
+(Consejo: Para la última versión, revisar la sección Download en https://nifi.apache.org/)[^1][^2][^3]
 
 ## 3. Instalar Apache NiFi
 
 Extraer el archivo descargado y moverlo a `/opt`:
 
 ```bash
-sudo tar -xvzf nifi-1.13.2-bin.tar.gz
-sudo mv nifi-1.13.2 /opt/nifi
+sudo tar -xvzf nifi-2.5.0-bin.zip
+sudo mv nifi-2.5.0-bin /opt/nifi
 ```
+## 4. Configurar variables de entorno
 
+Editar el archivo `.bashrc `para agregar las variables de entorno:
+
+```bash
+nano ~/.bashrc
+```
+Agregar las siguientes líneas al final del archivo:
+
+```bash
+export NIFI_HOME=/opt/nifi
+export PATH=$PATH:$NIFI_HOME/bin
+```
+Guardar y cerrar el archivo, luego ejecutar:
+
+```bash
+source ~/.bashrc
+```
 
 ## 4. Configurar la variable JAVA_HOME (si es necesario)
 
-Edita el archivo de entorno de NiFi si aparece una advertencia sobre JAVA_HOME:
+Para verificar la versión de java que tenga instalada en la distribución
+```bash
+sudo update-alternatives --config java
+```
+Editar el archivo de configuración de shell `~/.bashrc 
 
 ```bash
-sudo nano /opt/nifi/bin/nifi-env.sh
+sudo nano ~/.bashrc
 ```
-
-Agregar o editar la línea:
+Agregar estas líneas al final del archivo (usando la ruta de la version java que tenga instalada):
 
 ```bash
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export NIFI_HOME=/opt/nifi
+export PATH=$PATH:$JAVA_HOME/bin:$NIFI_HOME/bin
 ```
 
-Guardar y cerrar.
+Guardar y cerrar el archivo, luego ejecutar:
+
+```bash
+source ~/.bashrc
+```
 
 ## 5. (Opcional) Instalar como Servicio del Sistema
 
@@ -79,7 +107,7 @@ sudo service nifi status
 ```
 
 
-## 6. Iniciar Apache NiFi manualmente (alternativo)
+## 6. Iniciar Apache NiFi manualmente (Empleada en este manual)
 
 Si no quiere el servicio:
 
@@ -115,7 +143,7 @@ Si es un servidor remoto, usar la IP correspondiente, por ejemplo:
 ```
 http://192.168.1.100:8080/nifi
 ```
-
+Si la Interfaz web no carga	Verificar `nifi.web.http.port` en `nifi.properties` y reinicia NiFi.
 
 ## 8. Testear la funcionalidad básica
 
