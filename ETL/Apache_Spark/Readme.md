@@ -1,6 +1,6 @@
 # Instalación de Apache Spark
 
-Paso a paso para instalar, configurar y testear Apache Spark en Ubuntu usando únicamente la terminal y navegador web. Este flujo cubre desde la descarga hasta una prueba básiwca de funcionalidad.
+Paso a paso para instalar, configurar y testear Apache Spark en Ubuntu usando únicamente la terminal y navegador web. Este flujo cubre desde la descarga hasta una prueba básica de funcionalidad.
 
 ## 1. Actualizar el sistema
 
