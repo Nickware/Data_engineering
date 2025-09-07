@@ -34,10 +34,10 @@ Se debe obtener algo como `/usr/lib/jvm/java-11-openjdk-amd64/bin/java`.
 Descarga la última versión de Apache Spark desde el sitio oficial o usar `wget` (ejemplo, versión 1.13.2):
 
 ```bash
-wget https://downloads.apache.org/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz
+wget https://dlcdn.apache.org/spark/spark-4.0.0/spark-4.0.0-bin-hadoop3.tgz
 ```
 
-(Reemplaza `3.3.1` con la versión más reciente si es necesario).
+(Reemplazar `4.0.0` con la versión más reciente si es necesario).
 
 ## 4. Extraer el archivo descargado
 
