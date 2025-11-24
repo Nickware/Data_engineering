@@ -1,6 +1,6 @@
 # Pentaho Community Edition (CE)
 
-**Pentaho Community Edition (CE)**, que es la versión open-source del software de Business Intelligence de Pentaho. Sin embargo, hay algunos detalles importantes que debes conocer:
+**Pentaho Community Edition (CE)**, que es la versión open-source del software de Business Intelligence de Pentaho. Sin embargo, hay algunos detalles importantes que debe conocer:
 
 ---
 
@@ -110,7 +110,7 @@ Dado que **Pentaho CE** tiene versiones antiguas y limitaciones, te recomiendo e
 
 ### **Recomendación Personal**
 
-Si buscas una solución **moderna y activamente mantenida**, te recomiendo **Apache Hop** que es el sucesor espiritual de Pentaho PDI con:
+Si busca una solución **moderna y activamente mantenida**, se recomienda **Apache Hop** que es el sucesor espiritual de Pentaho PDI con:
 
 - ✅ Mejor integración con **tecnologías cloud**
 - ✅ Comunidad **activa**
