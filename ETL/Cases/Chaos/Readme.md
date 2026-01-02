@@ -1,8 +1,6 @@
-# Ecuación logística
+# Ecuación logística y el modelado de crecimiento de Conejos
 
-## Ecuación logística y conejos
-
-La versión continua de la ecuación logística modela una población $N(t)$ con crecimiento limitado: $\frac{dN}{dt}=rN(1-\frac{N}{K})$, donde $r$ es la tasa de crecimiento y $K$ la capacidad de carga; se usa como prototipo de “tasa de crecimiento de conejos” en muchos textos. En versión discreta y adimensional aparece el mapa logístico, $x_{n+1}=rx_n(1-x_n)$, donde $x_n\in[0,1]$ representa población normalizada generación a generación.[puente.lawr.ucdavis+1](https://puente.lawr.ucdavis.edu/pdf/Lesson_5_f.pdf)
+La versión continua de la ecuación logística permite modelar una población $N(t)$ con crecimiento limitado: $\frac{dN}{dt}=rN(1-\frac{N}{K})$, donde $r$ es la tasa de crecimiento y $K$ la capacidad de carga. En la literatura se usa regularmente como prototipo de “tasa de crecimiento de conejos”. En versión discreta y adimensional aparece el mapa logístico, $x_{n+1}=rx_n(1-x_n)$, donde $x_n\in[0,1]$ representa población normalizada generación a generación.[puente.lawr.ucdavis+1](https://puente.lawr.ucdavis.edu/pdf/Lesson_5_f.pdf)
 
 ## Mapa logístico, bifurcación y caos
 
@@ -33,15 +31,15 @@ El conjunto de Mandelbrot se define iterando $z_{n+1}=z_n^2+c$ en el plano compl
 19. https://www.hermes-investment.com/is/en/professional/insights/active-esg/constant-chaos-4-669-reasons-why-car-tech-could-outpace-insurers/
 20. https://www.youtube.com/watch?v=1dwVxZR0vFM
 
-# Plan mínimo para programar el mapa logístico y generar su diagrama de bifurcación
+# Programar el mapa logístico y generar el diagrama de bifurcación
 
-Un plan mínimo es: programar el mapa logístico y generar su diagrama de bifurcación, luego usar la analogía con el mapa cuadrático complejo para “alinear” mentalmente el Mandelbrot, y finalmente ver cómo tus sistemas biológicos/experimentales se reducen (por ajuste o heurística) a mapas 1D tipo logístico.[wikipedia+4](https://en.wikipedia.org/wiki/Logistic_map)
+Un plan mínimo es:  programar el mapa logístico y generar su diagrama de bifurcación, luego usar la analogía con el mapa cuadrático complejo para “alinear” mentalmente el Mandelbrot, y finalmente ver cómo tus sistemas biológicos/experimentales se reducen (por ajuste o heurística) a mapas 1D tipo logístico.[wikipedia+4](https://en.wikipedia.org/wiki/Logistic_map)
 
 ## 1) Diagrama de bifurcación (mapa logístico)
 
-Idea básica: barrer $r$ y, para cada $r$, iterar muchas veces $x_{n+1}=r x_n(1-x_n)$; descartar los primeros pasos (transitorio) y graficar los últimos valores de $x_n$ versus $r$.[puente.lawr.ucdavis+1](https://puente.lawr.ucdavis.edu/pdf/Lesson_5_f.pdf)
+Idea básica se centra en barrer $r$ y, para cada $r$, iterar muchas veces $x_{n+1}=r x_n(1-x_n)$; descartar los primeros pasos (transitorio) y graficar los últimos valores de $x_n$ versus $r$.[puente.lawr.ucdavis+1](https://puente.lawr.ucdavis.edu/pdf/Lesson_5_f.pdf)
 
-Pseudocódigo (fácil de portar a Octave, Python, C++ + xmgrace):
+Pseudocódigo (Puede ser implementado en Octave, Python, C++ + xmgrace):
 
 - Elegir un rango de parámetros, por ejemplo $r\in[2.5,4.0]$, con $N_r$ puntos (200–1000 típicamente).[wikipedia](https://en.wikipedia.org/wiki/Logistic_map)
 - Para cada $r$:
@@ -74,7 +72,7 @@ end
 fclose(fid);
 ```
 
-Luego en xmgrace: `xmgrace -nxy bifurcacion.dat` y ajustas ejes a $r\in[2.5,4]$, $x\in[0,1]$.[wikipedia](https://en.wikipedia.org/wiki/Logistic_map)
+Luego en xmgrace: `xmgrace -nxy bifurcacion.dat` y ajustar ejes a $r\in[2.5,4]$, $x\in[0,1]$.[wikipedia](https://en.wikipedia.org/wiki/Logistic_map)
 
 ## 2) Superponerlo conceptualmente con el Mandelbrot
 
@@ -88,20 +86,20 @@ Es decir: el diagrama de bifurcación es “la vista 1D” (en el eje de paráme
 
 ## 3) Mapear ejemplos biológicos/experimentales a mapas 1D
 
-La idea común es: escoger una variable escalar que capture el estado de ciclo en cada iteración (o ciclo) y construir un mapa de retorno $x_{n+1}=f(x_n)$, que en muchos casos se aproxima por algo “tipo logístico”.[pmc.ncbi.nlm.nih+3](https://pmc.ncbi.nlm.nih.gov/articles/PMC3253168/)
+La idea común es escoger una variable escalar que capture el estado de ciclo en cada iteración (o ciclo) y construir un mapa de retorno $x_{n+1}=f(x_n)$, que en muchos casos se aproxima por algo “tipo logístico”.[pmc.ncbi.nlm.nih+3](https://pmc.ncbi.nlm.nih.gov/articles/PMC3253168/)
 
 - “Conejos” (población discreta):
   - Variable: densidad de población normalizada $x_n = N_n/K$ en la generación $n$.[nature+1](https://www.nature.com/articles/s41598-024-62439-8)
   - Mapa: $x_{n+1}=r x_n (1-x_n)$, o variantes con términos de competencia o cosecha; el parámetro $r$ representa tasa de reproducción efectiva por generación, modulable por recursos, depredación, etc.[nature+1](https://www.nature.com/articles/s41598-024-62439-8)
 - Neuronas, disparo espontáneo:
-  - Variable: intervalo entre spikes, amplitud del potencial, o fase en cada ciclo de oscilación; con un Poincaré map se construye $x_{n+1}=f(x_n)$ a partir de un sistema continuo (Hindmarsh–Rose, Morris–Lecar, etc.).[pmc.ncbi.nlm.nih](https://pmc.ncbi.nlm.nih.gov/articles/PMC3253168/)
+  - Variable: intervalo entre spikes, amplitud del potencial o fase en cada ciclo de oscilación; con un Poincaré map se construye $x_{n+1}=f(x_n)$ a partir de un sistema continuo (Hindmarsh–Rose, Morris–Lecar, etc.).[pmc.ncbi.nlm.nih](https://pmc.ncbi.nlm.nih.gov/articles/PMC3253168/)
   - Ajuste: se observa que al variar una corriente de entrada $I$ o una conductancia, la secuencia de intervalos entre spikes muestra duplicación de periodo y caos; el mapa ajustado suele ser suave y unidimensional, por lo que se comporta cualitativamente como un mapa logístico.[pmc.ncbi.nlm.nih](https://pmc.ncbi.nlm.nih.gov/articles/PMC3253168/)
 - Grifo que gotea (dripping faucet):
   - Variable: intervalo de tiempo entre gotas $T_n$.[borges.pitt](https://www.borges.pitt.edu/sites/default/files/1103.pdf)
   - Mapa: $T_{n+1}=f(T_n; Q)$, donde $Q$ es el caudal. El experimento muestra que al aumentar $Q$, la secuencia $T_n$ pasa de periódica a duplicación de periodo y caos, y el mapa empírico $f$ tiene curvatura similar a $r x(1-x)$.[southampton+1](https://www.southampton.ac.uk/~mb1a10/lect6.pdf)
 - Fibrilación / arritmias en corazón (ej. conejos):
-  - Variable: intervalo RR (entre latidos), duración del potencial de acción, o amplitud de una onda de Ca$^{2+}$.[borges.pitt](https://www.borges.pitt.edu/sites/default/files/1103.pdf)
-  - Mapa: $x_{n+1}=f(x_n; \mu)$, donde $\mu$ representa parámetros de excitabilidad, frecuencia de estimulación o intensidad de descargas externas. Cambiando $\mu$ se observan transiciones de 1:1 a 2:1, 4:1, y patrones irregulares, interpretables como cascadas de duplicación de periodo hacia caos en un mapa efectivamente unidimensional.[jstor+1](https://www.jstor.org/stable/2398227)
+  - Variable: intervalo RR (entre latidos), duración del potencial de acción o amplitud de una onda de Ca$^{2+}$.[borges.pitt](https://www.borges.pitt.edu/sites/default/files/1103.pdf)
+  - Mapa: $x_{n+1}=f(x_n; \mu)$, donde $\mu$ representa parámetros de excitabilidad, frecuencia de estimulación o intensidad de descargas externas. Cambiando $\mu$ se observan transiciones de 1:1 a 2:1, 4:1 y patrones irregulares, interpretables como cascadas de duplicación de periodo hacia caos en un mapa efectivamente unidimensional.[jstor+1](https://www.jstor.org/stable/2398227)
 
 Todos estos sistemas son continuos y de alta dimensión en su descripción física “real”, pero su dinámica cíclica puede colapsarse a un mapa escalar de retorno cuando se observa el sistema “ciclo a ciclo”: ese mapa resulta ser, en muchos casos, topológicamente equivalente al mapa logístico (o a otro mapa unimodal suave), y por eso aparecen las mismas estructuras: diagrama de bifurcación, constante de Feigenbaum, ventanas periódicas en el caos y sensibilidad a condiciones iniciales.[muni+3](https://is.muni.cz/el/sci/jaro2020/M6201/um/ajp-jphyslet_1982_43_7_211_0.pdf)
 
