@@ -79,7 +79,7 @@ function graficar_superposicion()
   data_log = dlmread("bifurcacion_grifo_logistica.csv", ",", 0, 0);
   scatter(data_log(:,1), data_log(:,2), 30, "r", "filled"); hold on;
   
-  % *** CORREGIDO: Genera bifurcación teórica PROPIAMENTE ***
+  % *** Genera bifurcación teórica ***
   r_teor = linspace(3.0, 4.0, 500);
   [r_teor, bif_teor] = generar_bifurcacion_teorica_correcta(r_teor);
   plot(r_teor, bif_teor, "k-", "LineWidth", 1.5);
@@ -91,7 +91,7 @@ function graficar_superposicion()
 end
 
 function [r_out, bif_out] = generar_bifurcacion_teorica_correcta(r)
-  % *** VERSIÓN CORREGIDA: Retorna matrices Nx2 ***
+  % *** Retorna matrices Nx2 ***
   bif = [];
   for i = 1:length(r)
     x = 0.5;
