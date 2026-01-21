@@ -112,10 +112,10 @@ Dado que **Pentaho CE** tiene versiones antiguas y limitaciones, te recomiendo e
 
 Si busca una solución **moderna y activamente mantenida**, se recomienda **Apache Hop** que es el sucesor espiritual de Pentaho PDI con:
 
-- ✅ Mejor integración con **tecnologías cloud**
-- ✅ Comunidad **activa**
-- ✅ **Docker** y **Kubernetes** nativos
-- ✅ Conectores para **Spark, Kafka, BigQuery**
+-  Mejor integración con **tecnologías cloud**
+-  Comunidad **activa**
+-  **Docker** y **Kubernetes** nativos
+-  Conectores para **Spark, Kafka, BigQuery**
 
 **Instalar Apache Hop**:
 
