@@ -18,6 +18,7 @@ La ingeniería de datos es un área especializada dentro de la ciencia de datos 
 - **Bases de datos:** PostgreSQL, MySQL, MongoDB y almacenes de datos como Snowflake y BigQuery.
 - **Orquestación:** Apache Airflow, Prefect.
 - **Visualización de datos:** Grafana
+- **Aprendizaje Automatic:** Mlflow
 
 ## Rol en Evolución
 
