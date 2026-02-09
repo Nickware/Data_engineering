@@ -17,6 +17,7 @@ La ingeniería de datos es un área especializada dentro de la ciencia de datos 
 - **Marcos de big data:** Apache Hadoop, Spark, Flink.
 - **Bases de datos:** PostgreSQL, MySQL, MongoDB y almacenes de datos como Snowflake y BigQuery.
 - **Orquestación:** Apache Airflow, Prefect.
+- **Visualización de datos:** Grafana
 
 ## Rol en Evolución
 
