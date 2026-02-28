@@ -130,4 +130,4 @@ cd /opt/apache-hop-2.7.0
 
 ### **Conclusión**
 
-Pentaho Community Edition es una buena herramienta para **aprender conceptos ETL**, pero para **proyectos productivos** recomiendo **Apache Hop** o otras alternativas más modernas.
+Pentaho Community Edition es una buena herramienta para **aprender conceptos ETL**, pero para **proyectos productivos** se recomienda **Apache Hop** o otras alternativas más modernas.
