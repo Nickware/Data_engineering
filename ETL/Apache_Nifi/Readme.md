@@ -2,7 +2,7 @@
 
 Paso a paso para instalar, configurar y testear Apache NiFi en Ubuntu usando únicamente la terminal y navegador web. Este flujo cubre desde la descarga hasta una prueba básica de funcionalidad.
 
-## 1. Prerrequisitos: Instalación de Java
+## 1. Prerrequisitos: instalación de Java
 
 Apache NiFi requiere Java (OpenJDK recomendado). Verificar si se tiene Java instalado con:
 
@@ -14,7 +14,7 @@ Si no está instalado, ejecutar:
 
 ```bash
 sudo apt update
-# verificar que versión esta disponible en el repositorio e instalar la mas reciente
+# verificar qué versión está disponible en el repositorio e instalar la más reciente
 sudo apt search opendjk
 sudo apt install openjdk-21-jdk -y
 ```
@@ -66,7 +66,7 @@ source ~/.bashrc
 
 ## 4. Configurar la variable JAVA_HOME (si es necesario)
 
-Para verificar la versión de java que tenga instalada en la distribución
+Para verificar la versión de Java que tenga instalada en la distribución
 ```bash
 sudo update-alternatives --config java
 ```
@@ -75,7 +75,7 @@ Editar el archivo de configuración de shell `~/.bashrc
 ```bash
 sudo nano ~/.bashrc
 ```
-Agregar estas líneas al final del archivo (usando la ruta de la version java que tenga instalada):
+Agregar estas líneas al final del archivo (usando la ruta de la versión Java que tenga instalada):
 
 ```bash
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
@@ -89,7 +89,7 @@ Guardar y cerrar el archivo, luego ejecutar:
 source ~/.bashrc
 ```
 
-## 5. (Opcional) Instalar como Servicio del Sistema
+## 5. (Opcional) Instalar como servicio del sistema
 
 Esto permite manejar NiFi como un servicio estándar de Linux[^1]:
 
@@ -107,7 +107,7 @@ sudo service nifi status
 ```
 
 
-## 6. Iniciar Apache NiFi manualmente (Empleada en este manual)
+## 6. Iniciar Apache NiFi manualmente (empleada en este manual)
 
 Si no quiere el servicio:
 
@@ -129,7 +129,7 @@ Para detener:
 ```
 
 
-## 7. Acceder a la Interfaz Web
+## 7. Acceder a la interfaz web
 
 NiFi expone una UI en el puerto `8080` por defecto:
 Abrir el navegador y visitar:
@@ -143,11 +143,11 @@ Si es un servidor remoto, usar la IP correspondiente, por ejemplo:
 ```
 http://192.168.1.100:8080/nifi
 ```
-Si la Interfaz web no carga	Verificar `nifi.web.http.port` en `nifi.properties` y reinicia NiFi.
+Si la interfaz web no carga, verifica `nifi.web.http.port` en `nifi.properties` y reinicia NiFi.
 
 ## 8. Testear la funcionalidad básica
 
-- Se debera ver la interfaz gráfica de NiFi.
+- Se deberá ver la interfaz gráfica de NiFi.
 - Probar arrastrar un procesador (“Processor”), con botón derecho -> Add Processor.
 - Seleccionar, por ejemplo, `GenerateFlowFile`, conéctarlo a un `LogAttribute` y enlázarlo.
 - Darle play al flujo y revisar que los logs aparecen correctamente.
@@ -160,8 +160,6 @@ Si la Interfaz web no carga	Verificar `nifi.web.http.port` en `nifi.properties` 
 - El primer arranque puede demorar algunos segundos.
 
 Este flujo básico deja NiFi completamente operativo en Ubuntu y capaz de procesar flujos de datos utilizando solo software libre[^1][^2][^4][^3].
-
-<div style="text-align: center">⁂</div>
 
 [^1]: https://nifi.apache.org/docs/nifi-docs/html/getting-started.html
 
