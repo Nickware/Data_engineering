@@ -40,7 +40,7 @@ export AIRFLOW__CORE__EXECUTOR=SequentialExecutor
 pip install "apache-airflow[celery]==2.7.1" --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.7.1/constraints-3.8.txt"
 ```
 
-> **Nota**: Ajusta la versión (2.7.1) y Python (3.8) según tu versión de Python (`python3 --version`).
+> **Nota**: Ajustar la versión (2.7.1) y Python (3.8) según su versión de Python (`python3 --version`).
 
 ---
 
