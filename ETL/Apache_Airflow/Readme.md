@@ -263,3 +263,119 @@ airflow dags list
 # Probar un DAG
 airflow dags test mi_dag 2023-01-01
 ```
+# Instalar Apache Airflow empleando Distrobox 
+
+Para instalar Apache Airflow empleando Distrobox de la manera más limpia, estable y profesional, lo ideal es **no mezclar la versión de Python de tu sistema anfitrión** con la que requiere Airflow. Dado que Airflow es sumamente sensible a las versiones de sus dependencias, usaremos Distrobox para aislarlo por completo.
+
+A la fecha actual (2026), aunque Airflow ha avanzado en su soporte para Python 3.12, muchas de sus dependencias y proveedores (*providers*) siguen funcionando de forma mucho más robusta y sin errores de compilación en **Python 3.11** o **Python 3.10**.
+
+Aquí se tiene la guía paso a paso para crear un contenedor dedicado y limpio:
+
+---
+
+### Paso 1: Crear un contenedor dedicado con una imagen compatible
+
+En lugar de usar la última versión de Ubuntu (que viene con Python 3.12+ por defecto y causa los errores de `pkg_resources` que viste), vamos a usar deliberadamente **Ubuntu 22.04 LTS** o una imagen nativa de **Python 3.11**. Esto nos garantiza estabilidad absoluta sin pelear con banderas de compilación.
+
+Crear el contenedor ejecutando en tu terminal anfitriona:
+
+```bash
+distrobox create --name airflow-env --image ubuntu:22.04
+
+```
+
+### Paso 2: Entrar al contenedor y preparar el sistema
+
+Accede al entorno aislado:
+
+```bash
+distrobox enter airflow-env
+
+```
+
+Una vez dentro, actualiza el sistema e instala las herramientas esenciales de desarrollo y Python (Ubuntu 22.04 incluye Python 3.10/3.11 de forma nativa y ultra estable):
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y python3-pip python3-venv build-essential libssl-dev libffi-dev python3-dev
+
+```
+
+### Paso 3: Aislar Airflow en un Virtualenv (El secreto de la limpieza)
+
+Incluso dentro de Distrobox, la buena práctica dicta usar un entorno virtual para que `pip` no rompa los paquetes del propio contenedor:
+
+```bash
+# Crear el entorno virtual en tu directorio Home
+python3 -m venv ~/airflow_venv
+
+# Activar el entorno
+source ~/airflow_venv/bin/activate
+
+```
+
+*(Notarás que tu prompt cambia indicando que `(airflow_venv)` está activo).*
+
+### Paso 4: Instalación limpia usando las "Constraints" oficiales
+
+Airflow publica un archivo de restricciones (*Constraints*) para cada versión de Python. Esto le dice a `pip` exactamente qué versión de cada dependencia instalar para que **nunca** falle la compilación.
+
+Ejecutar lo siguiente dentro del entorno virtual activo:
+
+```bash
+# Definir variables de orden (puedes cambiar la versión de Airflow si deseas otra)
+AIRFLOW_VERSION=2.10.2
+PYTHON_VERSION="$(python3 --version | cut -d " " -f 2 | cut -d "." -f 1-2)"
+CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
+
+# Actualizar herramientas de empaquetado antes de instalar
+pip install --upgrade pip setuptools wheel
+
+# Instalar Airflow de forma limpia y garantizada
+pip install "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
+
+```
+
+### Paso 5: Inicializar Airflow
+
+Con la instalación limpia, define el directorio de trabajo e inicializa la base de datos local (SQLite por defecto para desarrollo):
+
+```bash
+export AIRFLOW_HOME=~/airflow
+airflow db init
+
+# Crear un usuario administrador para la interfaz web
+airflow users create \
+    --username admin \
+    --firstname TuNombre \
+    --lastname TuApellido \
+    --role Admin \
+    --email admin@example.com \
+    --password admin
+
+```
+
+---
+
+### Paso 6: El toque maestro de Distrobox (Acceso rápido)
+
+No necesita entrar a Distrobox y activar el entorno virtual manualmente cada vez que quiera encender Airflow. Puede crear un alias o script en tu sistema principal (fuera del contenedor) para lanzarlo en un solo comando.
+
+En la terminal del **sistema principal**, puede iniciar los servicios directamente así:
+
+* **Para lanzar el Webserver:**
+```bash
+distrobox enter airflow-env -- bash -c "source ~/airflow_venv/bin/activate && airflow webserver -p 8080"
+
+```
+
+
+* **Para lanzar el Scheduler (en otra pestaña):**
+```bash
+distrobox enter airflow-env -- bash -c "source ~/airflow_venv/bin/activate && airflow scheduler"
+
+```
+
+
+
+Abrir el navegador en `http://localhost:8080`, ¡y listo! se tiene un entorno de Airflow impecable, corriendo en un ecosistema compatible y sin haber contaminado una sola librería de tu máquina anfitriona.
