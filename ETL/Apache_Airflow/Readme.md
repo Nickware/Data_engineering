@@ -316,52 +316,70 @@ source ~/airflow_venv/bin/activate
 
 *(Notarás que tu prompt cambia indicando que `(airflow_venv)` está activo).*
 
-### Paso 4: Instalación limpia usando las "Constraints" oficiales
+### Paso 4: Instalación usando pip
 
-Airflow publica un archivo de restricciones (*Constraints*) para cada versión de Python. Esto le dice a `pip` exactamente qué versión de cada dependencia instalar para que **nunca** falle la compilación.
-
-Ejecutar lo siguiente dentro del entorno virtual activo:
+Ejecutar lo siguiente dentro del entorno virtual activo destinado para Airflow:
 
 ```bash
-# Definir variables de orden (puedes cambiar la versión de Airflow si deseas otra)
-AIRFLOW_VERSION=2.10.2
-PYTHON_VERSION="$(python3 --version | cut -d " " -f 2 | cut -d "." -f 1-2)"
-CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
-
 # Actualizar herramientas de empaquetado antes de instalar
 pip install --upgrade pip setuptools wheel
 
 # Instalar Airflow de forma limpia y garantizada
-pip install "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
+pip install apache-airflow
 
 ```
 
 ### Paso 5: Inicializar Airflow
 
-Con la instalación limpia, define el directorio de trabajo e inicializa la base de datos local (SQLite por defecto para desarrollo):
+Con la instalación, definir el directorio de trabajo e inicializar la base de datos local (SQLite por defecto para desarrollo):
 
 ```bash
 export AIRFLOW_HOME=~/airflow
 airflow db init
 
-# Crear un usuario administrador para la interfaz web
-airflow users create \
-    --username admin \
-    --firstname TuNombre \
-    --lastname TuApellido \
-    --role Admin \
-    --email admin@example.com \
-    --password admin
+# En Airflow 3, el comando standalone configura todo de golpe, incluyendo un usuario temporal
+airflow standalone
+```
+### Paso 6: Obtener la contraseña autogenerada real de Airflow 3
+
+Cuando se ejecuta `airflow standalone`, el sistema generó un archivo JSON oculto con las credenciales de administrador que la interfaz web de la versión 3 está esperando.
+
+Para obtenerlas. abrir una terminal nueva **dentro de el contenedor** (o mira el archivo desde el Home principal) y ejecutae esto para revelar la contraseña:
+
+```bash
+cat ~/airflow/simple_auth_manager_passwords.json.generated
 
 ```
 
+*(Si no está ahí, busca en `~/airflow/simple_auth_manager_passwords.json`)*.
+
+Verás un texto que contiene el usuario `admin` junto a una contraseña larga generada de forma automática. **Usa esa contraseña exacta** en la pantalla web del puerto empleado,lo debera dejar entrar de inmediato.
+
 ---
 
-### Paso 6: El toque maestro de Distrobox (Acceso rápido)
+### Paso 7: Forzar a Airflow 3 a aceptar una contraseña propia
 
-No necesita entrar a Distrobox y activar el entorno virtual manualmente cada vez que quiera encender Airflow. Puede crear un alias o script en tu sistema principal (fuera del contenedor) para lanzarlo en un solo comando.
+Si prefiere no usar una contraseña aleatoria y quiere definir una propia de manera rápida para desarrollo, puede sobreescribir el comportamiento de Airflow mediante una variable de entorno antes de lanzar el comando.
 
-En la terminal del **sistema principal**, puede iniciar los servicios directamente así:
+1. Apaga el proceso actual en la terminal (`Ctrl + C`).
+2. Define la contraseña que tú quieras ejecutando esto en la terminal:
+```bash
+export AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_PASSWORDS_FILE="~/airflow/mis_credenciales.json"
+
+```
+3. Vuelve a arrancar el sistema:
+```bash
+airflow standalone
+
+```
+
+Prueba buscando el archivo JSON autogenerado de la **Opción 1**. ¡Ese suele ser el detalle definitivo para saltarse el error 401 (error asociado a credenciales erroneas) e ingresar al sistema Airflow!
+
+### Paso 8: Distrobox (Acceso rápido)
+
+No se necesita entrar a Distrobox y activar el entorno virtual manualmente cada vez que quiera encender Airflow. Se puede crear un alias o script en el sistema principal (fuera del contenedor) para lanzarlo en un solo comando.
+
+En la terminal del **sistema principal**, se puede iniciar los servicios directamente así:
 
 * **Para lanzar el Webserver:**
 ```bash
@@ -375,7 +393,12 @@ distrobox enter airflow-env -- bash -c "source ~/airflow_venv/bin/activate && ai
 distrobox enter airflow-env -- bash -c "source ~/airflow_venv/bin/activate && airflow scheduler"
 
 ```
+Abrir el navegador en `http://localhost:8080`, ¡y listo! se tiene un entorno de Airflow, corriendo en un ecosistema compatible y sin haber contaminado una sola librería de la máquina anfitriona.
 
+* **Nota**
 
+Para levantar el servidor web especificando el puerto manualmente (en caso de que el puerto por defecto este siendo utilizado), ejecutar:
+```bash
+airflow api-server --port xxxx (puerto deseado)
 
-Abrir el navegador en `http://localhost:8080`, ¡y listo! se tiene un entorno de Airflow impecable, corriendo en un ecosistema compatible y sin haber contaminado una sola librería de tu máquina anfitriona.
+```
