@@ -4,7 +4,7 @@ Paso a paso para instalar, configurar y testear Apache Spark en Ubuntu usando ú
 
 ## 1. Actualizar el sistema
 
-Asegúrarse que el sistema esté actualizado.
+Asegurarse de que el sistema esté actualizado.
 
 ```bash
 sudo apt update && sudo apt upgrade -y
@@ -16,7 +16,7 @@ Si no está instalado, ejecutar:
 
 ```bash
 sudo apt update
-# verificar que versión esta disponible en el repositorio e instalar la mas reciente
+# verificar qué versión está disponible en el repositorio e instalar la más reciente
 sudo apt search opendjk
 sudo apt install openjdk-21-jdk -y
 ```
@@ -31,13 +31,13 @@ Se debe obtener algo como `/usr/lib/jvm/java-11-openjdk-amd64/bin/java`.
 
 ## 3. Descargar Apache Spark
 
-Descargar la última versión de Apache Spark desde el sitio oficial o usar `wget` (ejemplo, versión 1.13.2):
+Descargar la última versión de Apache Spark desde el sitio oficial o usar `wget`:
 
 ```bash
 wget https://dlcdn.apache.org/spark/spark-4.0.0/spark-4.0.0-bin-hadoop3.tgz
 ```
 
-(Reemplazar `4.0.0` con la versión más reciente si es necesario).
+(Reemplazar `4.0.0` por la versión más reciente si es necesario).
 
 ## 4. Extraer el archivo descargado
 
