@@ -13,9 +13,9 @@ La principal diferencia entre Flink y otros frameworks populares como **Apache S
 | **Modelo de Procesamiento** | **Nativo de flujos**: Procesa cada evento individualmente en el momento en que llega. | **Micro-lotes**: Divide el flujo en pequeños lotes de datos para procesarlos por separado. |
 | **Latencia** | **Muy baja (milisegundos)**: Ideal para sistemas que requieren una respuesta casi instantánea. | **Media a alta (segundos)**: La latencia mínima está determinada por la duración del micro-lote. |
 | **Caso de Uso Típico** |Detección de fraudes, monitoreo de transacciones financieras, IoT en tiempo real. | Análisis de dashboards, ETL con ventanas de tiempo amplias, procesamiento de logs. |
-| **Manejo de Estado** |Nativo y potente, con checkpoints incrementales para gestionar terabytes de estado. |Gestionado a través del checkpointing de Spark, pero con mayor overhead en recuperaciones. |
+| **Manejo de Estado** |Nativo y potente, con checkpoints incrementales para gestionar terabytes de estado. Gestionado a través del checkpointing de Spark, pero con mayor overhead en recuperaciones. |
 
-Esta arquitectura "nativa" le permite a Flink ofrecer un rendimiento superior en escenarios donde la latencia ultra baja y el procesamiento de eventos complejos y con estado son críticos.
+Esta arquitectura "nativa" le permite a Flink ofrecer un rendimiento superior en escenarios donde la latencia ultrabaja y el procesamiento de eventos complejos y con estado son críticos.
 
 ### Conceptos Fundamentales
 
