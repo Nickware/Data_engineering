@@ -8,7 +8,7 @@ No es una aplicación única ni todas las carpetas forman parte de un mismo pipe
 
 Una plataforma de datos combina herramientas con responsabilidades distintas. En este repositorio, la integración y el movimiento de datos se representan con Apache NiFi, Kafka y Hop; la coordinación de tareas, con Airflow y también con los workflows de Hop; el almacenamiento distribuido, con Hadoop; y el procesamiento, con Spark para cargas distribuidas y Flink para flujos de eventos. Las guías de Lakehouse, Iceberg y Hudi abordan cómo organizar tablas analíticas confiables sobre un data lake.
 
-El proyecto SDIS_SIRBE muestra una etapa posterior del ciclo: leer datos, resumirlos y producir tablas y gráficas con R. Los ejercicios de caos son material de análisis y modelado computacional relacionado con los datos, aunque no constituyen por sí mismos una plataforma o pipeline de ingeniería de datos. Apache HTTP Server aparece como una guía de infraestructura web y es un tema auxiliar, no una tecnología de procesamiento de datos.
+El proyecto SDIS_SIRBE muestra una etapa posterior del ciclo: leer datos, resumirlos y producir tablas y gráficas con R. Los ejercicios de caos son material de análisis y modelado computacional relacionado con los datos, aunque no constituyen por sí mismos una plataforma o pipeline de ingeniería de datos. Apache HTTP Server representa la capa de publicación web: puede servir reportes o documentación producidos por otros componentes, o actuar como proxy de una aplicación; no procesa los datos por sí mismo.
 
 ## Clasificación general de herramientas y tecnologías
 
@@ -22,6 +22,7 @@ Estas categorías son una referencia general para ubicar las tecnologías docume
 | Procesamiento de datos | Transformar datos en lote o en streaming | Apache Spark, Apache Flink y MapReduce en Hadoop |
 | Lakehouse y formatos de tabla | Gestionar tablas analíticas sobre almacenamiento tipo data lake | Apache Iceberg, Apache Hudi y los conceptos de Lakehouse |
 | Análisis y presentación | Resumir datos y comunicar resultados mediante tablas y gráficas | Scripts R del proyecto SDIS_SIRBE |
+| Publicación y acceso web | Servir páginas y archivos o enrutar solicitudes a aplicaciones web | Apache HTTP Server (HTTPD) |
 | Lenguajes y herramientas de apoyo | Implementar ejemplos, analizar datos y visualizar resultados | Python, R, MATLAB/Octave y gnuplot, según cada carpeta |
 
 ## Índice
@@ -47,6 +48,10 @@ Estas categorías son una referencia general para ubicar las tecnologías docume
 - [Apache Iceberg](Apache_iceberg/Readme.md): describe catálogos, metadatos y snapshots, además de transacciones, evolución de esquema y particiones y consultas históricas; incluye un ejemplo de uso con Spark.
 - [Apache Hudi](Apache_hudi/Readme.md): explica las tablas Copy on Write y Merge on Read, upserts, deletes, CDC y procesamiento incremental, y compara sus enfoques con Iceberg y Delta Lake.
 
+#### Publicación y acceso web
+
+- [Apache HTTP Server (HTTPD)](Apache/Readme.md): explica cómo un servidor web puede publicar reportes, archivos o documentación generados por otros componentes y actuar como proxy de una aplicación o API. La [guía de instalación](Apache/docs/instalacion.md) cubre Debian/Ubuntu y Fedora; los [casos de uso](Apache/docs/casos_uso.md) publican una gráfica de SDIS_SIRBE y exponen un resultado JSON a través de un proxy.
+
 ### Casos y ejercicios
 
 - [Caos y mapa logístico](Cases/Chaos/Readme.md): material de modelado sobre crecimiento poblacional, mapa logístico, diagramas de bifurcación y relación con el conjunto de Mandelbrot. La carpeta contiene programas MATLAB/Octave, una configuración gnuplot y datos CSV, incluidos ejemplos relacionados con un grifo que gotea.
@@ -62,7 +67,6 @@ Estas categorías son una referencia general para ubicar las tecnologías docume
 
 ### Otras carpetas
 
-- [Apache HTTP Server (HTTPD)](Apache/Readme.md): instrucciones para instalar, iniciar y probar el servidor web Apache en Linux. Se incluye como material auxiliar y no debe confundirse con las herramientas de datos anteriores.
 - `data_base/`: carpeta actualmente vacía, sin documentación ni archivos de proyecto.
 
 ## Nota sobre el contenido
