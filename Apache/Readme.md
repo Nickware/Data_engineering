@@ -17,3 +17,10 @@ La conexión entre estas piezas depende de la arquitectura: HTTPD no consume aut
 ## Documentación
 
 - [Instalación y prueba en Debian/Ubuntu y Fedora](docs/instalacion.md): instalación del paquete, gestión del servicio, acceso local y notas de firewall y rutas de configuración.
+- [Casos de uso ejecutables](docs/casos_uso.md): publicación de una gráfica creada por un script R de SDIS_SIRBE y proxy inverso para un resultado JSON de ejemplo, con instrucciones para ambas familias de distribuciones.
+
+## Referencias
+
+- [Documentación oficial de Apache HTTP Server 2.4](https://httpd.apache.org/docs/2.4/): configuración, módulos, seguridad y operación del servidor.
+- [Guía oficial de proxy inverso](https://httpd.apache.org/docs/2.4/howto/reverse_proxy.html): publicación de aplicaciones y servicios backend mediante HTTPD.
+- [Módulo mod_proxy](https://httpd.apache.org/docs/2.4/mod/mod_proxy.html): directivas `ProxyPass`, `ProxyPassReverse` y configuración de proxy.
