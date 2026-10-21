@@ -1,83 +1,19 @@
-Para instalar un servidor Apache (HTTPD) en Linux y activar `localhost`, seguir estos pasos:
+# Apache HTTP Server
 
-### 1. Instalar Apache
-Ejecutar en tu terminal (para distribuciones basadas en Debian/Ubuntu):
-```bash
-sudo apt update && sudo apt install apache2 -y
-```
+Apache HTTP Server (HTTPD) es un servidor web de código abierto desarrollado dentro de la Apache Software Foundation. Recibe solicitudes HTTP o HTTPS y responde con páginas, archivos u otros recursos web. Puede servir contenido estático directamente y, mediante módulos de proxy, reenviar solicitudes a aplicaciones y APIs que se ejecutan por separado.
 
-Para distribuciones basadas en RHEL/CentOS:
-```bash
-sudo yum install httpd -y
-```
+Su papel es exponer contenido mediante la web; no es un motor para transformar datos, un sistema de mensajería ni un orquestador. Por eso complementa, pero no sustituye, tecnologías como Kafka, Spark, Flink, NiFi o Airflow.
 
-### 2. Iniciar el servicio Apache
-```bash
-sudo systemctl start apache2  # Debian/Ubuntu
-sudo systemctl start httpd     # RHEL/CentOS
-```
+## Papel en una plataforma de datos
 
-### 3. Habilitar el inicio automático
-```bash
-sudo systemctl enable apache2  # Debian/Ubuntu
-sudo systemctl enable httpd    # RHEL/CentOS
-```
+Una plataforma puede usar varias herramientas en etapas diferentes: NiFi o Kafka reciben y mueven datos; Spark o Flink los procesan; Hadoop, Iceberg o Hudi ayudan a almacenarlos; y Airflow puede coordinar ejecuciones. Apache HTTP Server puede ocupar una capa de publicación al final, por ejemplo:
 
-### 4. Verificar el estado
-```bash
-sudo systemctl status apache2  # Debian/Ubuntu
-sudo systemctl status httpd    # RHEL/CentOS
-```
+- Servir páginas HTML, documentación o reportes estáticos generados a partir de resultados analíticos.
+- Publicar archivos disponibles para descarga en una red interna.
+- Actuar como proxy inverso delante de una aplicación o API de análisis.
 
-### 5. Probar el servidor
-Abrir navegador web e ingresa:
-```
-http://localhost
-```
-O desde la terminal:
-```bash
-curl http://localhost
-```
+La conexión entre estas piezas depende de la arquitectura: HTTPD no consume automáticamente tópicos de Kafka ni lee tablas Iceberg o Hudi. Una aplicación, un proceso de exportación o una API debe preparar el contenido que HTTPD servirá o al que reenviará las solicitudes. Airflow y NiFi, por su parte, ya cuentan con sus propias interfaces web para sus funciones habituales; no necesitan Apache HTTP Server para arrancar en una instalación básica.
 
-### Si no funciona (soluciones comunes):
+## Documentación
 
-#### a) Verificar si Apache está escuchando:
-```bash
-sudo netstat -tulpn | grep ':80'
-```
-Debe aparecer `apache2` o `httpd` escuchando en el puerto 80.
-
-#### b) Configurar el firewall:
-Para Ubuntu/Debian:
-```bash
-sudo ufw allow 80/tcp
-```
-
-Para CentOS/RHEL:
-```bash
-sudo firewall-cmd --permanent --add-service=http
-sudo firewall-cmd --reload
-```
-
-#### c) Revisar los logs de errores:
-```bash
-sudo tail -f /var/log/apache2/error.log  # Debian/Ubuntu
-sudo tail -f /var/log/httpd/error_log    # RHEL/CentOS
-```
-
-### 6. Archivo de prueba (opcional)
-Crear una página de prueba:
-```bash
-echo "¡Apache funciona!" | sudo tee /var/www/html/index.html
-```
-
-### Notas importantes:
-- El directorio raíz por defecto es `/var/www/html/`
-- El archivo de configuración principal está en:
-  - Debian/Ubuntu: `/etc/apache2/apache2.conf`
-  - RHEL/CentOS: `/etc/httpd/conf/httpd.conf`
-
-Si después de estos pasos aún no funciona, verificar:
-1. Que no haya otro servicio usando el puerto 80 (como Nginx)
-2. Que SELinux no esté bloqueando el acceso (en CentOS/RHEL)
-3. Que la red esté configurada correctamente
+- [Instalación y prueba en Debian/Ubuntu y Fedora](docs/instalacion.md): instalación del paquete, gestión del servicio, acceso local y notas de firewall y rutas de configuración.
