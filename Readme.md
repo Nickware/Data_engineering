@@ -1,35 +1,50 @@
 # Ingeniería de datos
 
-La ingeniería de datos es un área especializada dentro de la ciencia de datos y las tecnologías de la información que se centra en el diseño, la construcción, la gestión y la optimización de sistemas y procesos que mueven, almacenan y transforman grandes volúmenes de datos para su análisis y uso operativo.
+Este repositorio reúne apuntes, guías de instalación y ejercicios sobre tecnologías y prácticas de ingeniería de datos. Los temas incluyen integración y orquestación de pipelines, procesamiento distribuido y en streaming, almacenamiento tipo lakehouse y análisis con scripts.
 
-## Aspectos clave de la ingeniería de datos
+El contenido está organizado por tecnología o caso de estudio. No es una aplicación única: cada carpeta contiene documentación y, en algunos casos, ejemplos ejecutables propios.
 
-- **Desarrollo de pipelines de datos**: Los ingenieros de datos construyen y gestionan pipelines que automatizan el proceso de extracción de datos de diversas fuentes, su transformación a formatos utilizables y su carga en sistemas de almacenamiento como bases de datos o almacenes de datos. Esto se conoce como el proceso ETL (Extracción, Transformación, Carga).
-- **Infraestructura y arquitectura**: Diseñan y mantienen la arquitectura subyacente para la generación, el movimiento y el almacenamiento de datos. Esto incluye plataformas en la nube, sistemas de procesamiento distribuido y tecnologías de bases de datos.
-- **Calidad y gobernanza de datos**: Garantizar que los datos sean precisos, completos, oportunos y seguros es una parte fundamental de las responsabilidades de un ingeniero de datos. Esto también implica implementar la validación, la monitorización y el seguimiento de linaje de datos. - **Escalabilidad y rendimiento:** Los ingenieros de datos garantizan que las canalizaciones y las soluciones de almacenamiento sean robustas, escalables y de alto rendimiento para gestionar volúmenes y variedades de datos cada vez mayores.
-- **Colaboración:** Suelen trabajar en estrecha colaboración con analistas de datos, científicos y partes interesadas del negocio para comprender las necesidades de datos y ofrecer soluciones fiables que faciliten la generación de informes, la visualización, el análisis y el aprendizaje automático.
+## Índice
 
-## Herramientas y tecnologías comunes
+### Tecnologías y plataformas
 
-- **Lenguajes de programación:** Python, Java, Scala y SQL.
-- **Plataformas ETL:** Airbyte, Apache NiFi, Pentaho y Talend.
-- **Servicios en la nube:** AWS (Glue, Redshift), Google Cloud (BigQuery, Dataflow), Microsoft Azure (Data Factory).
-- **Marcos de big data:** Apache Hadoop, Spark, Flink.
-- **Bases de datos:** PostgreSQL, MySQL, MongoDB y almacenes de datos como Snowflake y BigQuery.
-- **Orquestación:** Apache Airflow, Prefect.
-- **Visualización de datos:** Grafana
-- **Aprendizaje Automatic:** Mlflow
+#### Integración y orquestación
 
-## Rol en Evolución
+- [Apache Airflow](Apache_Airflow/Readme.md): conceptos, instalación y [caso práctico](Apache_Airflow/cases/Readme.md) de un DAG de prueba.
+- [Apache Hop](Apache_hop/Readme.md): plataforma visual para diseñar y ejecutar pipelines y workflows de datos.
+- [Apache NiFi](Apache_Nifi/Readme.md): instalación y prueba de flujos de ingesta y enrutamiento.
 
-Mientras que la ingeniería de datos tradicional se centraba principalmente en datos estructurados y pipelines ETL por lotes para inteligencia empresarial, la ingeniería de datos moderna se ha expandido para abarcar la transmisión de datos en tiempo real, el análisis de big data, las arquitecturas en la nube, los data lakes y el soporte para cargas de trabajo de inteligencia artificial.
+#### Procesamiento y streaming
 
-## Roles y Títulos de Puesto Típicos
+- [Apache Hadoop](Apache_Hadoop/Readme.md): almacenamiento distribuido y procesamiento de grandes volúmenes de datos.
+- [Apache Spark](Apache_Spark/Readme.md): guía de instalación y verificación de Spark.
+- [Apache Flink](Apache_Flink/Readme.md): procesamiento de flujos y guía de instalación; incluye una [prueba con PyFlink](Apache_Flink/cases/Readme.md) y el script [physics_prueba.py](Apache_Flink/cases/physics_prueba.py).
+- [Apache Kafka](Apache_Kafka/Readme.md): instalación y prueba de una plataforma de streaming de eventos.
 
-- Ingeniero de Datos
-- Ingeniero de Plataforma de Datos
-- Desarrollador ETL
-- Ingeniero de Big Data
-- Ingeniero de Análisis
+#### Lakehouse y formatos de tabla
 
-La ingeniería de datos es fundamental para las organizaciones que desean aprovechar sus recursos de datos para la eficiencia operativa, la innovación y la toma de decisiones estratégicas. Conecta los datos sin procesar con la información procesable.
+- [Apache Lakehouse](Apache_Lakehouse/Readme.md): arquitectura lakehouse y tecnologías relacionadas.
+- [Apache Iceberg](Apache_iceberg/Readme.md): formato de tablas para data lakes analíticos.
+- [Apache Hudi](Apache_hudi/Readme.md): tablas transaccionales, actualizaciones e ingesta incremental.
+
+### Casos y ejercicios
+
+- [Caos y mapa logístico](Cases/Chaos/Readme.md): notas y recursos para estudiar bifurcaciones, el mapa logístico y el conjunto de Mandelbrot. La carpeta incluye scripts MATLAB/Octave, gnuplot y datos CSV.
+- [Prueba de Airflow](Apache_Airflow/cases/Readme.md): ejemplo de DAG con tareas Bash y Python.
+- [Prueba de Flink](Apache_Flink/cases/Readme.md): flujo PyFlink con una simulación de caída libre.
+
+### Proyecto SDIS_SIRBE
+
+- [Descripción del proyecto SDIS_SIRBE](sdis_sirve/README.md): colección de scripts R para análisis, tablas y gráficas.
+- [Gráficas generales](sdis_sirve/scripts_graficas/generales/README.md): documentación y scripts [rscript_sirbe_3.R](sdis_sirve/scripts_graficas/generales/rscript_sirbe_3.R) y [rscript_sirbe_4.R](sdis_sirve/scripts_graficas/generales/rscript_sirbe_4.R).
+- [Tablas generales](sdis_sirve/scripts_tablas/generales/README.md): documentación y script [rscript_sirbe_2.R](sdis_sirve/scripts_tablas/generales/rscript_sirbe_2.R).
+- [Tablas desagregadas](sdis_sirve/scripts_tablas/desagregadas/README.md): documentación y script [rscript_sirbe_.R](sdis_sirve/scripts_tablas/desagregadas/rscript_sirbe_.R).
+
+### Otras carpetas
+
+- [Apache HTTP Server (HTTPD)](Apache/Readme.md): guía para instalar y probar el servidor web Apache en Linux. Es independiente de las guías de tecnologías de datos listadas arriba.
+- `data_base/`: carpeta actualmente vacía, sin documentación ni proyecto descrito.
+
+## Nota sobre el contenido
+
+Las carpetas son independientes y sus guías pueden diferir en alcance y versión. Antes de ejecutar una instalación, revisa las versiones de software y los requisitos indicados en el README de esa tecnología. Los casos prácticos se documentan en sus propias carpetas.
