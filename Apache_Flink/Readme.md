@@ -300,11 +300,8 @@ cat /tmp/wordcount-output
 ```bash
 cat > wordcount.py << 'EOF'
 from pyflink.datastream import StreamExecutionEnvironment
-from pyflink.datastream.connectors import FileSource, StreamFormat
-from pyflink.common import SimpleStringSchema, WatermarkStrategy
 
 env = StreamExecutionEnvironment.get_execution_environment()
-env.add_jars("file:///opt/flink/lib/flink-connector-files-1.17.1.jar")
 
 # Crear source
 ds = env.from_collection(["hello world", "hello flink", "flink is great"])
