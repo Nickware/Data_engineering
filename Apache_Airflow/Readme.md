@@ -146,14 +146,20 @@ airflow db init
 ```
 
 #### **Crear usuario administrador**:
+
+Esta cuenta es solo para el entorno local de pruebas. No uses una contraseña compartida o predeterminada ni expongas el servicio con esta configuración. Introduce una contraseña única cuando la terminal la solicite.
+
 ```bash
+read -r -s -p "Contraseña para el usuario admin: " AIRFLOW_ADMIN_PASSWORD
+printf '\n'
 airflow users create \
     --username admin \
     --firstname Admin \
     --lastname User \
     --role Admin \
     --email admin@example.com \
-    --password admin
+    --password "$AIRFLOW_ADMIN_PASSWORD"
+unset AIRFLOW_ADMIN_PASSWORD
 ```
 
 ---
