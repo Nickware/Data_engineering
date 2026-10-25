@@ -94,6 +94,8 @@ Dado tu interés en el ecosistema de datos, es útil entender cómo se posiciona
 
 Paso a paso para instalar **Apache Airflow** en Linux (Ubuntu/Debian):
 
+> Esta guía contiene dos rutas de desarrollo con versiones distintas, que no se deben mezclar: la instalación directa y la alternativa Docker corresponden a **Airflow 2.7.1 con Python 3.8** y se conservan como referencia de legado; la guía con Distrobox corresponde a **Airflow 3.0.0 con Python 3.10** y es la ruta que coincide con el caso práctico de este repositorio.
+
 ---
 
 ### **1. Prerrequisitos**
@@ -242,7 +244,7 @@ Deberías ver algo como:
 #### **Cambiar a PostgreSQL**:
 ```bash
 sudo apt install postgresql postgresql-contrib -y
-pip install "apache-airflow[postgres]"
+pip install "apache-airflow[postgres]==2.7.1" --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.7.1/constraints-3.8.txt"
 ```
 
 #### **En `airflow.cfg`**:
@@ -269,11 +271,11 @@ airflow dags list
 # Probar un DAG
 airflow dags test mi_dag 2023-01-01
 ```
-# Instalar Apache Airflow empleando Distrobox 
+# Instalar Airflow 3.0.0 empleando Distrobox
 
-Para instalar Apache Airflow empleando Distrobox de la manera más limpia, estable y profesional, lo ideal es **no mezclar la versión de Python de tu sistema anfitrión** con la que requiere Airflow. Dado que Airflow es sumamente sensible a las versiones de sus dependencias, usaremos Distrobox para aislarlo por completo.
+Esta ruta instala Apache Airflow **3.0.0** en un entorno aislado con Distrobox. No mezcla las dependencias de Airflow con las del sistema anfitrión y utiliza constraints oficiales para fijar un conjunto compatible de dependencias.
 
-A la fecha actual (2026), aunque Airflow ha avanzado en su soporte para Python 3.12, muchas de sus dependencias y proveedores (*providers*) siguen funcionando de forma mucho más robusta y sin errores de compilación en **Python 3.11** o **Python 3.10**.
+Airflow 3.0.0 admite Python 3.9 a 3.12. Esta receta elige **Python 3.10**, que es la versión incluida por defecto en Ubuntu 22.04, para que la versión del intérprete y el archivo de constraints queden alineados.
 
 Aquí se tiene la guía paso a paso para crear un contenedor dedicado y limpio:
 
@@ -281,7 +283,7 @@ Aquí se tiene la guía paso a paso para crear un contenedor dedicado y limpio:
 
 ### Paso 1: Crear un contenedor dedicado con una imagen compatible
 
-En lugar de usar la última versión de Ubuntu (que viene con Python 3.12+ por defecto y causa los errores de `pkg_resources` que viste), vamos a usar deliberadamente **Ubuntu 22.04 LTS** o una imagen nativa de **Python 3.11**. Esto nos garantiza estabilidad absoluta sin pelear con banderas de compilación.
+Usaremos deliberadamente **Ubuntu 22.04 LTS** para disponer de Python 3.10 y mantener una combinación conocida con Airflow 3.0.0.
 
 Crear el contenedor ejecutando en tu terminal anfitriona:
 
@@ -299,7 +301,7 @@ distrobox enter airflow-env
 
 ```
 
-Una vez dentro, actualiza el sistema e instala las herramientas esenciales de desarrollo y Python (Ubuntu 22.04 incluye Python 3.10/3.11 de forma nativa y ultra estable):
+Una vez dentro, actualiza el sistema e instala Python, el entorno virtual y las herramientas de compilación:
 
 ```bash
 sudo apt update && sudo apt upgrade -y
@@ -330,8 +332,8 @@ Ejecutar lo siguiente dentro del entorno virtual activo destinado para Airflow:
 # Actualizar herramientas de empaquetado antes de instalar
 pip install --upgrade pip setuptools wheel
 
-# Instalar Airflow de forma limpia y garantizada
-pip install apache-airflow
+# Instalar Airflow 3.0.0 con las dependencias probadas para Python 3.10
+pip install "apache-airflow==3.0.0" --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-3.0.0/constraints-3.10.txt"
 
 ```
 

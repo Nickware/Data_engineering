@@ -85,7 +85,7 @@ Guardar el archivo (`Ctrl + O`, `Enter` y luego `Ctrl + X` en nano).
 
 ### 3. Probarlo en la Interfaz Web
 
-1. Ir al navegador e ingresar a `http://localhost:9090`.
+1. Ir al navegador e ingresar a `http://localhost:8080`.
 2. En la pestaña principal (**DAGs**), dar un par de segundos (o refrescar la página) y deberá aparecer **`mi_primer_dag_prueba`**.
 3. Notará que el DAG está en modo "pausado" (un switch azul/gris a la izquierda). **Actívalo** cambiando el switch a azul.
 4. A la derecha, haz clic en el botón de **Play (Trigger DAG)** para forzar el inicio manual.
