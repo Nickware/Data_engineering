@@ -332,8 +332,8 @@ Ejecutar lo siguiente dentro del entorno virtual activo destinado para Airflow:
 # Actualizar herramientas de empaquetado antes de instalar
 pip install --upgrade pip setuptools wheel
 
-# Instalar Airflow 3.0.0 con las dependencias probadas para Python 3.10
-pip install "apache-airflow==3.0.0" --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-3.0.0/constraints-3.10.txt"
+# Instalar Airflow 3.0.0 y los operadores del provider standard con dependencias probadas para Python 3.10
+pip install "apache-airflow==3.0.0" apache-airflow-providers-standard --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-3.0.0/constraints-3.10.txt"
 
 ```
 
@@ -385,28 +385,32 @@ Prueba buscando el archivo JSON autogenerado de la **Opción 1**. ¡Ese suele se
 
 ### Paso 8: Distrobox (Acceso rápido)
 
-No se necesita entrar a Distrobox y activar el entorno virtual manualmente cada vez que quiera encender Airflow. Se puede crear un alias o script en el sistema principal (fuera del contenedor) para lanzarlo en un solo comando.
+Para desarrollo local, la opción sencilla es iniciar todos los componentes con `airflow standalone` desde el sistema anfitrión:
 
-En la terminal del **sistema principal**, se puede iniciar los servicios directamente así:
-
-* **Para lanzar el Webserver:**
 ```bash
-distrobox enter airflow-env -- bash -c "source ~/airflow_venv/bin/activate && airflow webserver -p 8080"
-
+distrobox enter airflow-env -- bash -c 'source "$HOME/airflow_venv/bin/activate" && export AIRFLOW_HOME="$HOME/airflow" && airflow standalone'
 ```
 
+La interfaz queda disponible en `http://localhost:8080`. Mantén esta terminal abierta mientras uses Airflow.
 
-* **Para lanzar el Scheduler (en otra pestaña):**
+Si quieres ejecutar los componentes por separado, abre una terminal del sistema anfitrión para cada proceso. En Airflow 3 se debe iniciar el API server, el scheduler y el procesador de DAGs:
+
+**Terminal 1: API server**
+
 ```bash
-distrobox enter airflow-env -- bash -c "source ~/airflow_venv/bin/activate && airflow scheduler"
-
+distrobox enter airflow-env -- bash -c 'source "$HOME/airflow_venv/bin/activate" && export AIRFLOW_HOME="$HOME/airflow" && airflow api-server --port 8080'
 ```
-Abrir el navegador en `http://localhost:8080`, ¡y listo! se tiene un entorno de Airflow, corriendo en un ecosistema compatible y sin haber contaminado una sola librería de la máquina anfitriona.
 
-* **Nota**
+**Terminal 2: scheduler**
 
-Para levantar el servidor web especificando el puerto manualmente (en caso de que el puerto por defecto este siendo utilizado), ejecutar:
 ```bash
-airflow api-server --port xxxx (puerto deseado)
-
+distrobox enter airflow-env -- bash -c 'source "$HOME/airflow_venv/bin/activate" && export AIRFLOW_HOME="$HOME/airflow" && airflow scheduler'
 ```
+
+**Terminal 3: DAG processor**
+
+```bash
+distrobox enter airflow-env -- bash -c 'source "$HOME/airflow_venv/bin/activate" && export AIRFLOW_HOME="$HOME/airflow" && airflow dag-processor'
+```
+
+Después abre `http://localhost:8080`. Si ese puerto está ocupado, usa otro con `airflow api-server --port PUERTO` y accede al mismo puerto en el navegador.

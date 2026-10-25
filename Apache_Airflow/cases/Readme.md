@@ -27,8 +27,8 @@ Pegar el siguiente código dentro del archivo. Es un flujo muy sencillo con tres
 ```python
 from datetime import datetime, timedelta
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.bash import BashOperator
+from airflow.providers.standard.operators.python import PythonOperator
 
 # 1. Definición de argumentos por defecto
 default_args = {
