@@ -66,7 +66,7 @@ Distrobox permite instalar Flink y PyFlink dentro de un contenedor integrado con
 
 ### Crear el contenedor
 
-Estos comandos se ejecutan en el sistema anfitrión. Se utiliza Ubuntu 22.04 para disponer de Java 11 y Python 3.10:
+Estos comandos se ejecutan en el sistema anfitrión. Se utiliza Ubuntu 22.04 para disponer de OpenJDK 17 y Python 3.10:
 ```bash
 sudo apt update
 sudo apt install podman distrobox -y
@@ -79,9 +79,9 @@ Los pasos restantes se ejecutan dentro de `flink-dev`.
 ### **1. Instalar dependencias dentro del contenedor**
 ```bash
 sudo apt update
-sudo apt install openjdk-11-jdk python3 python3-pip python3-venv wget -y
+sudo apt install openjdk-17-jdk python3 python3-pip python3-venv wget -y
 
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 export FLINK_PYTHON_ENV="$HOME/flink-venv"
 
 python3 -m venv "$FLINK_PYTHON_ENV"
@@ -92,7 +92,7 @@ python3 -m venv "$FLINK_PYTHON_ENV"
 Para conservar las variables después de salir y volver a entrar al contenedor:
 ```bash
 cat >> ~/.bashrc <<'EOF'
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 export FLINK_HOME=$HOME/flink
 export FLINK_PYTHON_ENV=$HOME/flink-venv
 export PATH=$PATH:$FLINK_HOME/bin
@@ -128,10 +128,10 @@ distrobox rm flink-dev
 
 ### **1. Prerrequisitos**
 
-#### **Instalar Java** (Flink requiere Java 8 u 11):
+#### **Instalar Java 17** (versión recomendada para Flink 2.3.0):
 ```bash
 sudo apt update
-sudo apt install openjdk-11-jdk -y
+sudo apt install openjdk-17-jdk -y
 ```
 
 #### **Verificar Java**:
@@ -141,7 +141,7 @@ java -version
 
 #### **Configurar JAVA_HOME**:
 ```bash
-echo 'export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' >> ~/.bashrc
+echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> ~/.bashrc
 source ~/.bashrc
 ```
 
