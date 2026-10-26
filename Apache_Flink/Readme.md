@@ -86,7 +86,7 @@ export FLINK_PYTHON_ENV="$HOME/flink-venv"
 
 python3 -m venv "$FLINK_PYTHON_ENV"
 "$FLINK_PYTHON_ENV/bin/python" -m pip install --upgrade pip setuptools wheel
-"$FLINK_PYTHON_ENV/bin/python" -m pip install apache-flink
+"$FLINK_PYTHON_ENV/bin/python" -m pip install "apache-flink==2.3.0"
 ```
 
 Para conservar las variables después de salir y volver a entrar al contenedor:
@@ -153,7 +153,7 @@ python3 --version
 # Crear un entorno aislado para PyFlink
 python3 -m venv "$HOME/flink-venv"
 "$HOME/flink-venv/bin/python" -m pip install --upgrade pip setuptools wheel
-"$HOME/flink-venv/bin/python" -m pip install apache-flink
+"$HOME/flink-venv/bin/python" -m pip install "apache-flink==2.3.0"
 ```
 
 ---
@@ -164,17 +164,8 @@ python3 -m venv "$HOME/flink-venv"
 ```bash
 cd ~
 
-# Obtener la última versión binaria publicada por Apache Flink
-FLINK_VERSION="$(wget -qO- https://downloads.apache.org/flink/ \
-  | grep -oE 'href="flink-[0-9]+\.[0-9]+\.[0-9]+/"' \
-  | sed -E 's/.*flink-([0-9.]+)\/.*/\1/' \
-  | sort -V \
-  | tail -n 1)"
-
-test -n "$FLINK_VERSION" || {
-  echo "No se pudo determinar la última versión de Flink"
-  exit 1
-}
+# Mantener la distribución y PyFlink en la misma versión
+FLINK_VERSION="2.3.0"
 
 FLINK_PACKAGE="flink-${FLINK_VERSION}-bin-scala_2.12.tgz"
 wget "https://downloads.apache.org/flink/flink-${FLINK_VERSION}/${FLINK_PACKAGE}"
